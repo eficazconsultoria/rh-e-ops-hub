@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Link } from "react-router-dom";
 
 const accommodations = [
   { id: 1, name: "Alojamento Central", address: "Rua das Flores 123, Lisboa", capacity: 24, occupied: 18, rooms: 8, status: "active" },
@@ -25,9 +26,11 @@ export default function Alojamentos() {
           <h1 className="text-2xl font-bold font-display">Alojamentos</h1>
           <p className="text-sm text-muted-foreground">Gestão de alojamentos e quartos</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 transition-opacity">
-          <Plus className="mr-2 h-4 w-4" /> Novo Alojamento
-        </Button>
+        <Link to="/alojamentos/novo">
+          <Button className="bg-gradient-primary hover:opacity-90 transition-opacity">
+            <Plus className="mr-2 h-4 w-4" /> Novo Alojamento
+          </Button>
+        </Link>
       </motion.div>
 
       <motion.div variants={item} className="flex gap-3">
@@ -83,9 +86,11 @@ export default function Alojamentos() {
                     </div>
                     <Progress value={percentage} className="h-1.5" />
                   </div>
-                  <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground group-hover:text-primary">
-                    <Eye className="mr-1.5 h-3 w-3" /> Ver quartos e ocupação
-                  </Button>
+                  <Link to={`/alojamentos/${acc.id}`}>
+                    <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground group-hover:text-primary">
+                      <Eye className="mr-1.5 h-3 w-3" /> Ver quartos e ocupação
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             </motion.div>
