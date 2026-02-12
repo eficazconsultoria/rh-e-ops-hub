@@ -7,6 +7,8 @@ import AppLayout from "./components/layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Alojamentos from "./pages/Alojamentos";
+import AlojamentoDetalhe from "./pages/AlojamentoDetalhe";
+import AlojamentoNovo from "./pages/AlojamentoNovo";
 import Viaturas from "./pages/Viaturas";
 import Horas from "./pages/Horas";
 import Contratos from "./pages/Contratos";
@@ -28,6 +30,8 @@ const App = () => (
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/alojamentos" element={<Alojamentos />} />
+            <Route path="/alojamentos/novo" element={<AlojamentoNovo />} />
+            <Route path="/alojamentos/:id" element={<AlojamentoDetalhe />} />
             <Route path="/viaturas" element={<Viaturas />} />
             <Route path="/horas" element={<Horas />} />
             <Route path="/contratos" element={<Contratos />} />
