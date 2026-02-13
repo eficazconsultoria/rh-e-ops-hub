@@ -111,6 +111,7 @@ export default function AlojamentoDetalhe() {
   const data = accommodationsData[id || "1"];
   const [checkinOpen, setCheckinOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
+  const [addRoomOpen, setAddRoomOpen] = useState(false);
 
   if (!data) {
     return (
@@ -161,7 +162,7 @@ export default function AlojamentoDetalhe() {
             {data.observations && <p className="text-xs text-muted-foreground mt-1">{data.observations}</p>}
           </div>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
+        <Button className="bg-gradient-primary hover:opacity-90" onClick={() => setAddRoomOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Adicionar Quarto
         </Button>
       </motion.div>
@@ -210,7 +211,7 @@ export default function AlojamentoDetalhe() {
               <BedDouble className="h-10 w-10 text-muted-foreground mb-3" />
               <p className="text-sm font-medium">Nenhum quarto registado</p>
               <p className="text-xs text-muted-foreground mt-1">Adicione quartos para começar a gerir a ocupação.</p>
-              <Button variant="outline" size="sm" className="mt-4"><Plus className="mr-1.5 h-3 w-3" /> Adicionar Quarto</Button>
+              <Button variant="outline" size="sm" className="mt-4" onClick={() => setAddRoomOpen(true)}><Plus className="mr-1.5 h-3 w-3" /> Adicionar Quarto</Button>
             </CardContent>
           </Card>
         ) : (
@@ -315,6 +316,62 @@ export default function AlojamentoDetalhe() {
             <Button variant="outline" onClick={() => setCheckinOpen(false)}>Cancelar</Button>
             <Button className="bg-gradient-primary hover:opacity-90" onClick={() => setCheckinOpen(false)}>
               <UserPlus className="mr-2 h-4 w-4" /> Confirmar Check-in
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Room Dialog */}
+      <Dialog open={addRoomOpen} onOpenChange={setAddRoomOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display">Adicionar Quarto</DialogTitle>
+            <DialogDescription>
+              Preencha os dados do novo quarto para "{data.name}".
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Nome / Número do Quarto</label>
+              <Input placeholder="Ex: Quarto 301" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Capacidade</label>
+                <Input type="number" min={1} max={20} defaultValue={2} placeholder="Nº de camas" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Género / Regra</label>
+                <Select defaultValue="misto">
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="masculino">Masculino</SelectItem>
+                    <SelectItem value="feminino">Feminino</SelectItem>
+                    <SelectItem value="misto">Misto</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Estado</label>
+              <Select defaultValue="active">
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Ativo</SelectItem>
+                  <SelectItem value="inactive">Inativo</SelectItem>
+                  <SelectItem value="maintenance">Em manutenção</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Observações</label>
+              <Textarea placeholder="Observações adicionais..." className="resize-none" rows={2} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddRoomOpen(false)}>Cancelar</Button>
+            <Button className="bg-gradient-primary hover:opacity-90" onClick={() => setAddRoomOpen(false)}>
+              <Plus className="mr-2 h-4 w-4" /> Criar Quarto
             </Button>
           </DialogFooter>
         </DialogContent>
