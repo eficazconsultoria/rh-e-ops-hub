@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,9 +10,9 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth, ROLE_LABELS } from "@/contexts/AuthContext";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
@@ -33,6 +32,9 @@ interface AppSidebarProps {
 
 export default function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const location = useLocation();
+  const { user, hasAccess } = useAuth();
+
+  const visibleItems = menuItems.filter((item) => hasAccess(item.path));
 
   return (
     <aside
@@ -56,9 +58,17 @@ export default function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         )}
       </div>
 
+      {/* Role badge */}
+      {!collapsed && user && (
+        <div className="mx-3 mt-3 rounded-lg bg-sidebar-accent/50 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wider text-sidebar-muted">Perfil</p>
+          <p className="text-xs font-semibold text-sidebar-accent-foreground">{ROLE_LABELS[user.role]}</p>
+        </div>
+      )}
+
       {/* Nav */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        {menuItems.map((item) => {
+        {visibleItems.map((item) => {
           const isActive =
             item.path === "/"
               ? location.pathname === "/"
