@@ -1,4 +1,4 @@
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Search, Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -10,12 +10,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth, ROLE_LABELS } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface AppTopbarProps {
   onMobileMenuToggle: () => void;
 }
 
 export default function AppTopbar({ onMobileMenuToggle }: AppTopbarProps) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card/80 px-4 backdrop-blur-md lg:px-6">
       {/* Mobile menu */}
@@ -69,21 +78,24 @@ export default function AppTopbar({ onMobileMenuToggle }: AppTopbarProps) {
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-secondary">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                AD
+                {user?.initials ?? "??"}
               </div>
               <div className="hidden text-left md:block">
-                <p className="text-sm font-medium leading-none">Admin</p>
-                <p className="text-xs text-muted-foreground">admin@empresa.pt</p>
+                <p className="text-sm font-medium leading-none">{user?.name}</p>
+                <p className="text-xs text-muted-foreground">{user ? ROLE_LABELS[user.role] : ""}</p>
               </div>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+            <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Perfil</DropdownMenuItem>
             <DropdownMenuItem>Configurações</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Sair</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sair
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

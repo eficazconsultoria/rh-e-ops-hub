@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import AppLayout from "./components/layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -24,24 +26,26 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/alojamentos" element={<Alojamentos />} />
-            <Route path="/alojamentos/novo" element={<AlojamentoNovo />} />
-            <Route path="/alojamentos/:id" element={<AlojamentoDetalhe />} />
-            <Route path="/viaturas" element={<Viaturas />} />
-            <Route path="/horas" element={<Horas />} />
-            <Route path="/contratos" element={<Contratos />} />
-            <Route path="/funcionarios" element={<Funcionarios />} />
-            <Route path="/relatorios" element={<Relatorios />} />
-            <Route path="/configuracoes" element={<Configuracoes />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/alojamentos" element={<Alojamentos />} />
+              <Route path="/alojamentos/novo" element={<AlojamentoNovo />} />
+              <Route path="/alojamentos/:id" element={<AlojamentoDetalhe />} />
+              <Route path="/viaturas" element={<Viaturas />} />
+              <Route path="/horas" element={<Horas />} />
+              <Route path="/contratos" element={<Contratos />} />
+              <Route path="/funcionarios" element={<Funcionarios />} />
+              <Route path="/relatorios" element={<Relatorios />} />
+              <Route path="/configuracoes" element={<Configuracoes />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,18 +1,47 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Building2, Eye, EyeOff, Mail, Lock, Shield, Users, Wrench, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useAuth, MOCK_USERS, ROLE_LABELS, type UserRole } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+
+const ROLE_ICONS: Record<UserRole, React.ReactNode> = {
+  admin: <Shield className="h-4 w-4" />,
+  rh: <Users className="h-4 w-4" />,
+  operacoes: <Wrench className="h-4 w-4" />,
+  funcionario: <User className="h-4 w-4" />,
+};
+
+const ROLE_DESCRIPTIONS: Record<UserRole, string> = {
+  admin: "Acesso total a todos os módulos",
+  rh: "Colaboradores, contratos, horas, relatórios",
+  operacoes: "Alojamentos, quartos, viaturas",
+  funcionario: "Perfil próprio, documentos e assinatura",
+};
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("admin@empresa.pt");
+  const [password, setPassword] = useState("password");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { toast } = useToast();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/");
+    if (login(email)) {
+      navigate("/");
+    } else {
+      toast({ title: "Credenciais inválidas", description: "Utilize um dos emails de demonstração.", variant: "destructive" });
+    }
+  };
+
+  const handleDemoLogin = (demoEmail: string) => {
+    if (login(demoEmail)) {
+      navigate("/");
+    }
   };
 
   return (
@@ -52,7 +81,7 @@ export default function Login() {
             <h1 className="text-xl font-bold font-display">Portal RH & Operações</h1>
           </div>
 
-          <div className="space-y-2 mb-8">
+          <div className="space-y-2 mb-6">
             <h2 className="text-2xl font-bold font-display">Iniciar Sessão</h2>
             <p className="text-sm text-muted-foreground">Introduza as suas credenciais para aceder</p>
           </div>
@@ -62,7 +91,7 @@ export default function Login() {
               <label className="text-sm font-medium">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input type="email" placeholder="seu.email@empresa.pt" className="pl-9" defaultValue="admin@empresa.pt" />
+                <Input type="email" placeholder="seu.email@empresa.pt" className="pl-9" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
             </div>
 
@@ -77,7 +106,8 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   className="pl-9 pr-10"
-                  defaultValue="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -94,7 +124,35 @@ export default function Login() {
             </Button>
           </form>
 
-          <p className="mt-8 text-center text-xs text-muted-foreground">
+          {/* Demo accounts */}
+          <div className="mt-8">
+            <div className="relative mb-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-background px-2 text-muted-foreground">Contas de demonstração</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {MOCK_USERS.map((u) => (
+                <button
+                  key={u.id}
+                  onClick={() => handleDemoLogin(u.email)}
+                  className="flex flex-col items-start gap-1 rounded-lg border border-border p-3 text-left transition-colors hover:bg-secondary/80"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary">{ROLE_ICONS[u.role]}</span>
+                    <span className="text-xs font-semibold">{ROLE_LABELS[u.role]}</span>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground leading-tight">{ROLE_DESCRIPTIONS[u.role]}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-xs text-muted-foreground">
             © {new Date().getFullYear()} Portal RH & Operações. Todos os direitos reservados.
           </p>
         </motion.div>
