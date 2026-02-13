@@ -12,6 +12,8 @@ import Alojamentos from "./pages/Alojamentos";
 import AlojamentoDetalhe from "./pages/AlojamentoDetalhe";
 import AlojamentoNovo from "./pages/AlojamentoNovo";
 import Viaturas from "./pages/Viaturas";
+import ViaturaDetalhe from "./pages/ViaturaDetalhe";
+import ViaturaNova from "./pages/ViaturaNova";
 import Horas from "./pages/Horas";
 import Contratos from "./pages/Contratos";
 import Funcionarios from "./pages/Funcionarios";
@@ -35,7 +37,9 @@ const App = () => (
               <Route path="/alojamentos" element={<Alojamentos />} />
               <Route path="/alojamentos/novo" element={<AlojamentoNovo />} />
               <Route path="/alojamentos/:id" element={<AlojamentoDetalhe />} />
-              <Route path="/viaturas" element={<Viaturas />} />
+            <Route path="/viaturas" element={<Viaturas />} />
+            <Route path="/viaturas/nova" element={<ViaturaNova />} />
+            <Route path="/viaturas/:id" element={<ViaturaDetalhe />} />
               <Route path="/horas" element={<Horas />} />
               <Route path="/contratos" element={<Contratos />} />
               <Route path="/funcionarios" element={<Funcionarios />} />

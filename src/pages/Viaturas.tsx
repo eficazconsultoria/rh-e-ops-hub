@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Car, Plus, Search, Fuel, Calendar, User, MoreHorizontal } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,8 @@ const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { st
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 export default function Viaturas() {
+  const navigate = useNavigate();
+
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
       <motion.div variants={item} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -41,7 +44,7 @@ export default function Viaturas() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline"><Calendar className="mr-2 h-4 w-4" /> Agenda</Button>
-          <Button className="bg-gradient-primary hover:opacity-90"><Plus className="mr-2 h-4 w-4" /> Nova Viatura</Button>
+          <Button className="bg-gradient-primary hover:opacity-90" onClick={() => navigate("/viaturas/nova")}><Plus className="mr-2 h-4 w-4" /> Nova Viatura</Button>
         </div>
       </motion.div>
 
@@ -83,7 +86,7 @@ export default function Viaturas() {
             </TableHeader>
             <TableBody>
               {vehicles.map((v) => (
-                <TableRow key={v.id} className="hover:bg-muted/30 cursor-pointer">
+                <TableRow key={v.id} className="hover:bg-muted/30 cursor-pointer" onClick={() => navigate(`/viaturas/${v.id}`)}>
                   <TableCell className="font-mono font-semibold text-sm">{v.plate}</TableCell>
                   <TableCell>
                     <div>
